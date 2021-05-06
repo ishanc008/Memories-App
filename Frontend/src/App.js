@@ -3,10 +3,18 @@ import { Container, AppBar, Typography, Grid, Grow } from '@material-ui/core';
 import memories from "./images/memories.png"
 import Posts from "./Components/Posts/Posts"
 import Form from "./Components/Form/Form"
+import { useDispatch } from "react-redux"
 import useStyles from "./styles"
+import { getPosts } from "./actions/posts"
+
 
 function App() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPosts())
+  }, [dispatch])
 
   return (
     <div className="App">
