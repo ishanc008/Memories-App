@@ -26,3 +26,12 @@ export const likeInc = (id) => async (dispatch) => {
         console.log(error.message);
     }
 }
+
+export const deletePost = (id) => async (dispatch) => {
+    try {
+        const { data } = await axios.delete("https://memories008.herokuapp.com/posts/" + id)
+        dispatch({ type: "DELETE_REQ", payload: data })
+    } catch (error) {
+        console.log(error.message);
+    }
+}

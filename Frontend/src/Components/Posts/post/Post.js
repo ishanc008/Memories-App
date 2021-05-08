@@ -5,7 +5,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import makeStyles from "./styles"
 import moment from "moment"
 import { useDispatch } from "react-redux"
-import { likeInc } from "../../../actions/posts"
+import { deletePost, likeInc } from "../../../actions/posts"
 
 const Post = ({ post }) => {
     const classes = makeStyles();
@@ -35,7 +35,7 @@ const Post = ({ post }) => {
                     <ThumbUpAltIcon fontSize="small" />
                     LIKES {post.likeCount}
                 </Button>
-                <Button size="small" color="primary" onClick={() => { }}>
+                <Button size="small" color="primary" onClick={() => { dispatch(deletePost(post._id)) }}>
                     <DeleteIcon fontSize="small" />
                     DELETE
                 </Button>

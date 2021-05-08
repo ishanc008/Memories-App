@@ -34,3 +34,9 @@ router.route("/like/:id").patch((req, res) => {
         }
     })
 })
+
+router.route("/:id").delete((req, res) => {
+    Post.findByIdAndDelete(req.params.id)
+        .then(() => res.json(req.params.id))
+        .catch(err => res.status(400).json("Error: " + err))
+})
