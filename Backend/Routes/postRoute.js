@@ -22,3 +22,15 @@ router.route("/add").post((req, res) => {
         .then(() => res.json(newPost))
         .catch(err => res.status(400).json("Error: " + err))
 })
+
+router.route("/like/:id").patch((req, res) => {
+    const id = req.params.id;
+    Post.findOneAndUpdate({ _id: id }, { $inc: { "likeCount": 1 } }, { new: true }, (err, updatedPost) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.json(updatedPost);
+        }
+    })
+})

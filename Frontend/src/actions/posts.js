@@ -17,3 +17,12 @@ export const putPosts = (post) => async (dispatch) => {
         console.log(error.message);
     }
 }
+
+export const likeInc = (id) => async (dispatch) => {
+    try {
+        const { data } = await axios.patch("https://memories008.herokuapp.com/posts/like/" + id)
+        dispatch({ type: "LIKE_UPD", payload: data })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
