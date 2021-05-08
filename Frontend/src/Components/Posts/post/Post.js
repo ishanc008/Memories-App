@@ -5,7 +5,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import makeStyles from "./styles"
 import moment from "moment"
 import { useDispatch } from "react-redux"
-import { deletePost, likeInc } from "../../../actions/posts"
+import { deletePost, likeInc, currId } from "../../../actions/posts"
 
 const Post = ({ post }) => {
     const classes = makeStyles();
@@ -19,7 +19,7 @@ const Post = ({ post }) => {
                 <Typography variant="body2">{moment(post.createdAt).fromNow()}</Typography>
             </div>
             <div className={classes.overlay2}>
-                <Button style={{ color: "white" }} size="small" onClick={() => { }}>
+                <Button style={{ color: "white" }} size="small" onClick={() => { dispatch(currId(post._id)) }}>
                     <MoreHorizIcon fontSize="default" />
                 </Button>
             </div>

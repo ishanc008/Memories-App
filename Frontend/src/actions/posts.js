@@ -35,3 +35,7 @@ export const deletePost = (id) => async (dispatch) => {
         console.log(error.message);
     }
 }
+
+export const currId = (id) => {
+    return { type: "POST_ID", payload: id }
+}
