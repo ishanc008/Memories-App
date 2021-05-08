@@ -18,15 +18,6 @@ export const putPosts = (post) => async (dispatch) => {
     }
 }
 
-export const likeInc = (id) => async (dispatch) => {
-    try {
-        const { data } = await axios.patch("https://memories008.herokuapp.com/posts/like/" + id)
-        dispatch({ type: "LIKE_UPD", payload: data })
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
 export const deletePost = (id) => async (dispatch) => {
     try {
         const { data } = await axios.delete("https://memories008.herokuapp.com/posts/" + id)
@@ -36,6 +27,24 @@ export const deletePost = (id) => async (dispatch) => {
     }
 }
 
+export const likeInc = (id) => async (dispatch) => {
+    try {
+        const { data } = await axios.patch("https://memories008.herokuapp.com/posts/like/" + id)
+        dispatch({ type: "LIKE_UPD", payload: data })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 export const currId = (id) => {
     return { type: "POST_ID", payload: id }
+}
+
+export const updatePost = (id, post) => async (dispatch) => {
+    try {
+        const { data } = await axios.patch("https://memories008.herokuapp.com/posts/" + id, post)
+        dispatch({ type: "UPDATE_REQ", payload: data })
+    } catch (error) {
+        console.log(error);
+    }
 }

@@ -23,6 +23,12 @@ router.route("/add").post((req, res) => {
         .catch(err => res.status(400).json("Error: " + err))
 })
 
+router.route("/:id").delete((req, res) => {
+    Post.findByIdAndDelete(req.params.id)
+        .then(() => res.json(req.params.id))
+        .catch(err => res.status(400).json("Error: " + err))
+})
+
 router.route("/like/:id").patch((req, res) => {
     const id = req.params.id;
     Post.findOneAndUpdate({ _id: id }, { $inc: { "likeCount": 1 } }, { new: true }, (err, updatedPost) => {
@@ -35,8 +41,21 @@ router.route("/like/:id").patch((req, res) => {
     })
 })
 
-router.route("/:id").delete((req, res) => {
-    Post.findByIdAndDelete(req.params.id)
-        .then(() => res.json(req.params.id))
-        .catch(err => res.status(400).json("Error: " + err))
+router.route("/:id").patch((req, res) => {
+    const _id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send("No post with this id");
+
+    const post = req.body
+
+    Post.findByIdAndUpdate(_id, post, { new: true }, (err, updatedPost) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.json(updatedPost);
+        }
+    });
+
 })
+
+module.exports = router

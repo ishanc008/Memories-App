@@ -3,7 +3,7 @@ import makeStyles from "./styles"
 import { Paper, Typography, TextField, Button } from "@material-ui/core"
 import FileBase from 'react-file-base64';
 import { useDispatch } from "react-redux"
-import { putPosts, currId } from "../../actions/posts"
+import { putPosts, updatePost, currId } from "../../actions/posts"
 
 
 const Form = () => {
@@ -36,6 +36,7 @@ const Form = () => {
         }
         else {
             console.log("update req");
+            dispatch(updatePost(currentId, user));
             dispatch(currId(""));
         }
         handleClear();

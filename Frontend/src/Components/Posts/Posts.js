@@ -8,7 +8,7 @@ import Post from "./post/Post"
 const Posts = () => {
     const posts = useSelector(state => state.posts)
     const classes = makeStyles();
-    console.log(posts);
+    //console.log(posts);
     return (
         !posts.length ? <CircularProgress /> : (
             <Grid container className={classes.mainContainer} alignItems="stretch" spacing={3}>
