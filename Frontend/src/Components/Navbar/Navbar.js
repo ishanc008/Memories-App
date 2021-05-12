@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
 import { AppBar, Button, Typography, Avatar, Toolbar } from '@material-ui/core';
 import memories from "../../images/memories.png"
 import makeStyles from "./styles"
 
 const Navbar = () => {
     const classes = makeStyles();
-    const user = null;
+    const user = useSelector(state => state.auth)
+    console.log(user.profile);
     return (
         <AppBar className={classes.appBar} position="static" color="primary">
             <div className={classes.brandContainer}>
@@ -17,10 +19,12 @@ const Navbar = () => {
             <Toolbar className={classes.toolbar}>
                 {
                     user ? (
-                        <div className={classes.profile}>
-                            <Avatar className={classes.purple}>Dp</Avatar>
-                            <Typography className={classes.username} variant="h6">Username</Typography>
-                            <Button variant="contained" className={classes.logout} color="secondary">Logout</Button>
+                        <div className={classes.logout}>
+                            <div className={classes.profile}>
+                                <Avatar className={classes.purple} src={user.profile.imageUrl}></Avatar>
+                                <Typography className={classes.username} variant="h6">{user.profile.name}</Typography>
+                            </div>
+                            <Button variant="contained" color="secondary">Logout</Button>
                         </div>
                     ) : (
                         <Button component={Link} to="/Auth" variant="contained" >Sign In</Button>
