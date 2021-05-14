@@ -15,13 +15,17 @@ const Auth = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isSignedUp, setIsSignedUp] = useState(false);
+    const [formData, setFormData] = useState({ email: "", password: "", confirmPassword: "", firstName: "", lastName: "" })
 
-    const handleOnSubmit = () => {
-
+    const handleOnSubmit = (e) => {
+        e.preventDefault();
+        console.log(`formData: ${formData}`);
     }
 
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+        console.log(e.target);
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value })
     }
 
     const toggle = () => {
@@ -86,9 +90,7 @@ const Auth = () => {
                     <GoogleLogin
                         clientId="795985652085-6ussjfntbaepe2fj9o244lntnbfk5su0.apps.googleusercontent.com"
                         render={(renderProps) => (
-                            <div class="g-signin2" data-width="1000" data-height="200">
-                                <GoogleButton onClick={renderProps.onClick} style={{ width: "363px", marginBottom: "10px" }} disabled={renderProps.disabled}>Sign in with Google</GoogleButton>
-                            </div>
+                            <GoogleButton onClick={renderProps.onClick} style={{ width: "363px", marginBottom: "10px" }} disabled={renderProps.disabled}>Sign in with Google</GoogleButton>
                         )}
                         onSuccess={googleSuccess}
                         onFailure={googleFailure}

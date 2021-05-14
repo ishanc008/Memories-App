@@ -16,7 +16,7 @@ const Navbar = () => {
         setUser(JSON.parse(localStorage.getItem("profile")));
     }, [location])
 
-    console.log(user);
+    //console.log(user);
 
     const handleLogout = () => {
         dispatch({ type: "LOGOUT", payload: "" })
@@ -37,7 +37,7 @@ const Navbar = () => {
                     user ? (
                         <div className={classes.logout}>
                             <div className={classes.profile}>
-                                <Avatar className={classes.purple} src={user.profile.imageUrl} alt={user.profile.imageUrl}></Avatar>
+                                <Avatar className={classes.purple} src={user.profile.imageUrl} alt={user.profile.name}>{user.profile.name.charAt(0)}</Avatar>
                                 <Typography className={classes.username} variant="h6">{user.profile.name}</Typography>
                             </div>
                             <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>

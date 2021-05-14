@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const postRouter = require("./Routes/postRoute");
+const userRouter = require("./Routes/userRoute");
 
 const app = express();
 
@@ -18,5 +19,6 @@ const connection = mongoose.connection;
 connection.once("open", () => console.log("Database connected"));
 
 app.use("/posts", postRouter);
+app.use("/user", userRouter);
 
 app.listen(port, () => console.log("server running on port 5000"));
