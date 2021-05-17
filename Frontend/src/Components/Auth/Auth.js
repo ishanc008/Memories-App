@@ -7,31 +7,39 @@ import useStyles from "./styles"
 import Input from "./Input"
 import { GoogleLogin } from "react-google-login"
 import GoogleButton from 'react-google-button'
+import { signin, signup } from "../../actions/auth"
+import { useSelector } from "react-redux"
 
 const Auth = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
+    const error = useSelector(state => state.auth)
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isSignedUp, setIsSignedUp] = useState(false);
+    const [isSignedUp, setIsSignedUp] = useState(true);
     const [formData, setFormData] = useState({ email: "", password: "", confirmPassword: "", firstName: "", lastName: "" })
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        console.log(`formData: ${formData}`);
+        if (isSignedUp) {
+            dispatch(signin(formData, history));
+        }
+        else {
+            dispatch(signup(formData, history));
+        }
     }
 
     const handleChange = (e) => {
-        console.log(e.target);
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value })
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     const toggle = () => {
+        setFormData({ email: "", password: "", confirmPassword: "", firstName: "", lastName: "" })
         setIsSignedUp((prev) => !prev);
         setShowPassword(false);
         setShowConfirmPassword(false);
+        dispatch({ type: "ERR", payload: "" })
     }
 
     const handleShowPassword = () => {
@@ -54,8 +62,8 @@ const Auth = () => {
         }
     }
 
-    const googleFailure = () => {
-        console.log("login unsuccessful");
+    const googleFailure = (error) => {
+        console.log(error);
     }
 
     return (
@@ -65,6 +73,7 @@ const Auth = () => {
                     <LockIcon />
                 </Avatar>
                 <Typography variant="h5">{isSignedUp ? "Sign In" : "Sign Up"}</Typography>
+                <p style={{ color: "red" }}>{error}</p>
                 <form className={classes.form} onSubmit={handleOnSubmit}>
                     <Grid container spacing={2}>
                         {
@@ -75,8 +84,8 @@ const Auth = () => {
                                 </>
                             )
                         }
-                        <Input name="email" label="Email" handleChange={handleChange} type="email" />
-                        <Input name="password" label="Password" handleChange={handleChange} handleShowPassword={handleShowPassword} type={showPassword ? "text" : "password"} />
+                        <Input name="email" value={formData.email} label="Email" handleChange={handleChange} type="email" />
+                        <Input name="password" value={formData.password} label="Password" handleChange={handleChange} handleShowPassword={handleShowPassword} type={showPassword ? "text" : "password"} />
                         {
                             !isSignedUp && (
                                 <Input name="confirmPassword" label="Confirm Password" handleShowPassword={handleShowConfirmPassword} handleChange={handleChange} type={showConfirmPassword ? "text" : "password"} />
@@ -90,7 +99,9 @@ const Auth = () => {
                     <GoogleLogin
                         clientId="795985652085-6ussjfntbaepe2fj9o244lntnbfk5su0.apps.googleusercontent.com"
                         render={(renderProps) => (
-                            <GoogleButton onClick={renderProps.onClick} style={{ width: "363px", marginBottom: "10px" }} disabled={renderProps.disabled}>Sign in with Google</GoogleButton>
+                            <div class="g-signin2" data-width="1000" data-height="200">
+                                <GoogleButton onClick={renderProps.onClick} style={{ width: "363px", marginBottom: "10px" }} disabled={renderProps.disabled}>Sign in with Google</GoogleButton>
+                            </div>
                         )}
                         onSuccess={googleSuccess}
                         onFailure={googleFailure}

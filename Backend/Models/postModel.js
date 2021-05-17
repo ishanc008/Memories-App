@@ -1,22 +1,22 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-const postSchema = new Schema({
+const postSchema = mongoose.Schema({
     title: String,
     message: String,
+    name: String,
     creator: String,
     tags: [String],
     selectedFile: String,
-    likeCount: {
-        type: Number,
-        default: 0
+    likes: {
+        type: [String],
+        default: []
     },
     createdAt: {
         type: Date,
-        default: new Date()
-    }
-});
+        default: new Date(),
+    },
+})
 
-const Post = mongoose.model("Post", postSchema);
+var Post = mongoose.model('Post', postSchema);
 
-module.exports = Post;
+export default Post;

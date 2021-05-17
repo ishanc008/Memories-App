@@ -10,11 +10,11 @@ const Form = () => {
     const classes = makeStyles();
     const dispatch = useDispatch();
     const currentId = useSelector(state => state.currentId)
+    const currentUser = JSON.parse(localStorage.getItem("profile"));
 
     const [user, setUser] = useState({
         title: "",
         message: "",
-        creator: "",
         tags: "",
         selectedFile: ""
     })
@@ -31,7 +31,6 @@ const Form = () => {
         setUser({
             title: "",
             message: "",
-            creator: "",
             tags: "",
             selectedFile: ""
         })
@@ -42,7 +41,7 @@ const Form = () => {
         console.log(user);
         if (!post) {
             console.log("post req");
-            dispatch(putPosts(user));
+            dispatch(putPosts({ ...user, name: currentUser?.profile?.name }));
         }
         else {
             console.log("update req");
@@ -52,22 +51,29 @@ const Form = () => {
         handleClear();
     }
 
-
     return (
-        <Paper className={classes.paper}>
-            <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleOnSubmit}>
-                <Typography variant="h6" align="center">{!post ? "Creating" : "Update"} a Memory</Typography>
-                <TextField name="creator" label="Creator" variant="outlined" fullWidth value={user.creator} onChange={(e) => setUser({ ...user, creator: e.target.value })}></TextField>
-                <TextField name="title" label="Title" variant="outlined" fullWidth value={user.title} onChange={(e) => setUser({ ...user, title: e.target.value })}></TextField>
-                <TextField name="message" label="Message" variant="outlined" fullWidth multiline rows={3} value={user.message} onChange={(e) => setUser({ ...user, message: e.target.value })}></TextField>
-                <TextField name="tags" label="Tags(separated by , and without #)" variant="outlined" fullWidth value={user.tags} onChange={(e) => setUser({ ...user, tags: e.target.value.split(",") })}></TextField>
-                <div className={classes.fileInput}>
-                    <FileBase type="file" multiple={false} onDone={({ base64 }) => setUser({ ...user, selectedFile: base64 })} />
-                </div>
-                <Button color="primary" variant="contained" size="large" fullWidth type="submit" className={classes.buttonSubmit}>Submit</Button>
-                <Button color="secondary" variant="contained" size="small" fullWidth onClick={handleClear}>Clear</Button>
-            </form>
-        </Paper>
+        <>
+            {currentUser ?
+                <Paper className={classes.paper}>
+                    <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleOnSubmit}>
+                        <Typography variant="h6" align="center">{!post ? "Creating" : "Update"} a Memory</Typography>
+                        <TextField name="title" label="Title" variant="outlined" fullWidth value={user.title} onChange={(e) => setUser({ ...user, title: e.target.value })}></TextField>
+                        <TextField name="message" label="Message" variant="outlined" fullWidth multiline rows={3} value={user.message} onChange={(e) => setUser({ ...user, message: e.target.value })}></TextField>
+                        <TextField name="tags" label="Tags(separated by , and without #)" variant="outlined" fullWidth value={user.tags} onChange={(e) => setUser({ ...user, tags: e.target.value.split(",") })}></TextField>
+                        <div className={classes.fileInput}>
+                            <FileBase type="file" multiple={false} onDone={({ base64 }) => setUser({ ...user, selectedFile: base64 })} />
+                        </div>
+                        <Button color="primary" variant="contained" size="large" fullWidth type="submit" className={classes.buttonSubmit}>Submit</Button>
+                        <Button color="secondary" variant="contained" size="small" fullWidth onClick={handleClear}>Clear</Button>
+                    </form>
+                </Paper> :
+                <Paper className={classes.paper}>
+                    <Typography variant="h6" align="center">
+                        Please Sign In to create your own memories and like other's memories.
+                    </Typography>
+                </Paper>
+            }
+        </>
     )
 }
 

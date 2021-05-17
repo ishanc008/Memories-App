@@ -9,6 +9,7 @@ const Input = (props) => {
             <TextField
                 name={props.name}
                 label={props.label}
+                value={props.value}
                 variant="outlined"
                 fullWidth
                 autoFocus={props.autofocus}

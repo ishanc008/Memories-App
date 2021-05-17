@@ -1,7 +1,9 @@
-const router = require("express").Router();
-const mongoose = require("mongoose");
-//const auth = require("../middleware/auth")
-let Post = require("../Models/postModel");
+import express from "express"
+import mongoose from "mongoose"
+import auth from "../middleware/auth.js"
+import Post from "../Models/postModel.js"
+
+const router = express.Router();
 
 router.get("/", (req, res) => {
     Post.find()
@@ -9,14 +11,16 @@ router.get("/", (req, res) => {
         .catch(err => res.status(400).json("Error: " + err))
 })
 
-router.post("/add", (req, res) => {
-    const { title, message, creator, tags, selectedFile } = req.body;
+router.post("/add", auth, (req, res) => {
+    const { title, message, tags, selectedFile, name } = req.body;
     const newPost = new Post({
         title,
         message,
-        creator,
         tags,
-        selectedFile
+        name,
+        selectedFile,
+        creator: req.userId,
+        createdAt: new Date().toISOString()
     })
 
     newPost.save()
@@ -30,16 +34,24 @@ router.delete("/:id", (req, res) => {
         .catch(err => res.status(400).json("Error: " + err))
 })
 
-router.patch("/like/:id", (req, res) => {
+router.patch("/like/:id", auth, async (req, res) => {
     const id = req.params.id;
-    Post.findOneAndUpdate({ _id: id }, { $inc: { "likeCount": 1 } }, { new: true }, (err, updatedPost) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.json(updatedPost);
-        }
-    })
+    if (!req.userId) {
+        return res.json({ message: "Unauthenticated" });
+    }
+
+    const post = await Post.findById(id);
+    const index = post.likes.findIndex((id) => id === String(req.userId));
+    if (index === -1) {
+        post.likes.push(req.userId);
+    }
+    else {
+        post.likes = post.likes.filter((id) => id !== String(req.userId));
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true });
+
+    res.status(200).json(updatedPost);
 })
 
 router.patch("/:id", (req, res) => {
@@ -59,4 +71,4 @@ router.patch("/:id", (req, res) => {
 
 })
 
-module.exports = router
+export default router;

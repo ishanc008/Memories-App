@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux"
 import { AppBar, Button, Typography, Avatar, Toolbar } from '@material-ui/core';
 import memories from "../../images/memories.png"
 import makeStyles from "./styles"
+import decode from "jwt-decode";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
@@ -11,18 +12,28 @@ const Navbar = () => {
     const history = useHistory();
     const location = useLocation();
     const [user, setUser] = useState(null)
-
-    useEffect(() => {
-        setUser(JSON.parse(localStorage.getItem("profile")));
-    }, [location])
-
-    //console.log(user);
+    const currentUser = JSON.parse(localStorage.getItem("profile"));
 
     const handleLogout = () => {
         dispatch({ type: "LOGOUT", payload: "" })
         history.push("/Auth");
         setUser(null);
     }
+
+    useEffect(() => {
+        const token = currentUser?.token;
+        if (token) {
+            const decodedToken = decode(token);
+            if (decodedToken.exp * 1000 < new Date().getTime()) {
+                handleLogout();
+            }
+        }
+
+        setUser(JSON.parse(localStorage.getItem("profile")));
+    }, [location])
+
+    //console.log(user);
+
 
     return (
         <AppBar className={classes.appBar} position="static" color="primary">

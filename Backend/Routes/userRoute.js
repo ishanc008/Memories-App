@@ -1,10 +1,9 @@
-const router = require("express").Router();
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const userModel = require("../Models/userModel");
-
-let user = require("../Models/userModel");
-const secret = "test";
+import bcrypt from "bcryptjs"
+import express from "express"
+import jwt from "jsonwebtoken"
+import userModel from "../Models/userModel.js"
+const router = express.Router();
+const secret = process.env.SECRET;
 
 router.route("/signin").post(async (req, res) => {
     const { email, password } = req.body;
@@ -29,7 +28,7 @@ router.route("/signin").post(async (req, res) => {
 })
 
 router.route("/signup").post(async (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
     const { email, password, confirmPassword, firstName, lastName } = req.body;
     try {
         const existingUser = await userModel.findOne({ email });
@@ -43,7 +42,7 @@ router.route("/signup").post(async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 12);
 
         const user = await userModel.create({
-            name: `${firstName}${lastName}`,
+            name: `${firstName} ${lastName}`,
             email: email,
             password: hashedPassword,
         })
@@ -57,5 +56,5 @@ router.route("/signup").post(async (req, res) => {
     }
 })
 
-module.exports = router
+export default router;
 
